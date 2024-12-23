@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- Include PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+    <script>
+        // Specify the workerSrc property
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js';
+    </script>
+    <script src="/js/pdf-viewer.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>PDF Viewer</h1>
+</header>
+<main>
+    <div id="pdfContainer"></div>
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+</main>
+</body>
+</html>

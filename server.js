@@ -15,6 +15,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 const routes = require('./routes');
 app.use('/api', routes);
 
+// Route to serve PDF files
+app.get('/pdfs/:pdfName', (req, res) => {
+    const pdfName = req.params.pdfName;
+    const pdfPath = path.join(__dirname, 'public', 'pdfs', pdfName);
+    res.sendFile(pdfPath);
+});
+
 // Default route to serve the index.html file
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
