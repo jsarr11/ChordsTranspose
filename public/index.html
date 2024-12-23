@@ -5,16 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Search</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/password-check.js" defer></script>
     <script src="/js/search.js" defer></script>
 </head>
 <body>
-<header>
-    <h1>PDF Search</h1>
-</header>
-<main>
-    <input type="text" id="searchBar" placeholder="Search for PDF titles...">
-    <button id="searchButton">Search</button>
-    <div id="searchResults"></div>
-</main>
+<!-- Password prompt -->
+<div id="password-container">
+    <h1>Enter Password</h1>
+    <input type="password" id="password" placeholder="Enter password">
+    <button id="submit-password">Submit</button>
+    <p id="error-message" style="color: red; display: none;">Incorrect password. Try again.</p>
+</div>
+
+<!-- Hidden content for the homepage -->
+<div id="content" style="display: none;">
+    <header>
+        <h1>PDF Search</h1>
+    </header>
+    <main>
+        <input type="text" id="searchBar" placeholder="Search for PDF titles...">
+        <button id="searchButton">Search</button>
+        <div id="searchResults"></div>
+    </main>
+</div>
 </body>
 </html>
