@@ -10,7 +10,6 @@ let pageNum = 1;
 let pageIsRendering = false;
 let pageNumIsPending = null;
 
-const scale = 1.5;
 const pdfContainer = document.getElementById('pdfContainer');
 const prevButton = document.getElementById('prevPage');
 const nextButton = document.getElementById('nextPage');
@@ -18,17 +17,21 @@ const nextButton = document.getElementById('nextPage');
 const renderPage = (num) => {
     pageIsRendering = true;
     pdfDoc.getPage(num).then(page => {
-        const viewport = page.getViewport({ scale });
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = pdfContainer.clientWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale });
+
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        canvas.height = scaledViewport.height;
+        canvas.width = scaledViewport.width;
+
         pdfContainer.innerHTML = '';
         pdfContainer.appendChild(canvas);
 
         const renderCtx = {
             canvasContext: context,
-            viewport,
+            viewport: scaledViewport,
         };
 
         const renderTask = page.render(renderCtx);
