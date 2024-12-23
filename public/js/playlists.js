@@ -19,11 +19,24 @@ function updatePlaylistsUI() {
         const playlistDiv = document.createElement("div");
         playlistDiv.textContent = `${playlistName} (${playlists[playlistName].length} files)`;
 
+        // View button
         const viewButton = document.createElement("button");
         viewButton.textContent = "View";
         viewButton.addEventListener("click", () => viewPlaylist(playlistName));
 
+        // Delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.style.marginLeft = "10px";
+        deleteButton.addEventListener("click", () => {
+            const confirmDelete = confirm(`Are you sure you want to delete the playlist \"${playlistName}\"?`);
+            if (confirmDelete) {
+                deletePlaylist(playlistName);
+            }
+        });
+
         playlistDiv.appendChild(viewButton);
+        playlistDiv.appendChild(deleteButton);
         playlistsContainer.appendChild(playlistDiv);
     }
 }
@@ -67,6 +80,13 @@ function viewPlaylist(playlistName) {
 
     playlistDetailsSection.style.display = "block";
     document.getElementById("playlists-section").style.display = "none";
+}
+
+// Delete a playlist
+function deletePlaylist(playlistName) {
+    delete playlists[playlistName]; // Remove playlist from object
+    localStorage.setItem("playlists", JSON.stringify(playlists)); // Update localStorage
+    updatePlaylistsUI(); // Refresh the playlists UI
 }
 
 // Play the playlist (open the first file in the viewer)
