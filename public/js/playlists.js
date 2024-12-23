@@ -10,6 +10,7 @@ const playlistItems = document.getElementById("playlist-items");
 const playlistTitle = document.getElementById("playlist-title");
 const saveOrderButton = document.getElementById("saveOrderButton");
 const backToPlaylistsButton = document.getElementById("backToPlaylistsButton");
+const playPlaylistButton = document.getElementById("playPlaylistButton");
 
 // Update playlists list
 function updatePlaylistsUI() {
@@ -64,10 +65,21 @@ function viewPlaylist(playlistName) {
         playlistItems.appendChild(listItem);
     });
 
-    // Show playlist details section
     playlistDetailsSection.style.display = "block";
     document.getElementById("playlists-section").style.display = "none";
 }
+
+// Play the playlist (open the first file in the viewer)
+playPlaylistButton.addEventListener("click", () => {
+    const playlistName = playlistTitle.textContent;
+    const playlistFiles = playlists[playlistName];
+    if (playlistFiles.length > 0) {
+        const firstPdf = playlistFiles[0];
+        window.location.href = `/viewer.html?pdf=${encodeURIComponent(firstPdf)}&playlist=${encodeURIComponent(playlistName)}`;
+    } else {
+        alert("This playlist is empty!");
+    }
+});
 
 // Move a file up or down in the playlist
 function moveFile(playlistName, index, direction) {
@@ -81,11 +93,6 @@ function moveFile(playlistName, index, direction) {
     localStorage.setItem("playlists", JSON.stringify(playlists));
     viewPlaylist(playlistName);
 }
-
-// Save playlist order
-saveOrderButton.addEventListener("click", () => {
-    alert("Playlist order saved!");
-});
 
 // Back to playlists
 backToPlaylistsButton.addEventListener("click", () => {

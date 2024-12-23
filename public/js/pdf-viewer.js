@@ -2,11 +2,11 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 
 const urlParams = new URLSearchParams(window.location.search);
 const pdfUrl = `/pdfs/${urlParams.get('pdf')}`;
-const pdfName = decodeURIComponent(urlParams.get('pdf')); // Get current PDF name
-const playlistName = urlParams.get('playlist'); // Get playlist name if navigating from a playlist
-let playlists = JSON.parse(localStorage.getItem("playlists")) || {}; // Playlists stored in localStorage
+const pdfName = decodeURIComponent(urlParams.get('pdf')); // Current PDF name
+const playlistName = urlParams.get('playlist'); // Playlist name from URL
+let playlists = JSON.parse(localStorage.getItem("playlists")) || {}; // Playlists from localStorage
 let currentPlaylistFiles = playlistName ? playlists[playlistName] : []; // Files in the current playlist
-let currentFileIndex = currentPlaylistFiles.indexOf(pdfName); // Index of the current file in the playlist
+let currentFileIndex = currentPlaylistFiles.indexOf(pdfName); // Current file index in the playlist
 
 const pdfContainer = document.getElementById('pdfContainer');
 const playlistButtonsContainer = document.getElementById("playlist-buttons");
@@ -50,8 +50,8 @@ const transposeChord = (chord, semitoneShift) => {
 
 // Transpose chord lines
 const transposeChordLines = (lines, semitoneShift) => {
-    return lines.map((line, index, allLines) => {
-        if (index === 0 || index === 1 || index === 3 || index === allLines.length - 1) {
+    return lines.map((line, index) => {
+        if (index === 0 || index === 1 || index === 3 || index === lines.length - 1) {
             return null; // Skip hidden lines
         }
         if (chordRegex.test(line.trim())) {
@@ -133,47 +133,66 @@ pdfjsLib.getDocument(pdfUrl).promise
         pdfContainer.innerHTML = `<p>Error processing PDF: ${err.message}</p>`;
     });
 
-// ADD TO PLAYLIST FUNCTIONALITY
-
-function updatePlaylistButtons() {
-    playlistButtonsContainer.innerHTML = "";
-    for (const playlistName in playlists) {
+// Update playlist buttons
+const updatePlaylistButtons = () => {
+    playlistButtonsContainer.innerHTML = ""; // Clear previous buttons
+    for (const playlist in playlists) {
         const button = document.createElement("button");
-        button.textContent = playlistName;
-        button.addEventListener("click", () => {
-            addToPlaylist(playlistName);
-        });
+        button.textContent = playlist;
+        button.addEventListener("click", () => addToPlaylist(playlist));
         playlistButtonsContainer.appendChild(button);
     }
-}
+};
 
-function addToPlaylist(playlistName) {
-    if (!playlists[playlistName].includes(pdfName)) {
-        playlists[playlistName].push(pdfName);
-        localStorage.setItem("playlists", JSON.stringify(playlists));
+// Add to playlist functionality
+const addToPlaylist = (playlist) => {
+    if (!playlists[playlist].includes(pdfName)) {
+        playlists[playlist].push(pdfName);
+        localStorage.setItem("playlists", JSON.stringify(playlists)); // Save updated playlists
+        addStatus.textContent = `Added to playlist "${playlist}"`;
         addStatus.style.display = "block";
         setTimeout(() => {
             addStatus.style.display = "none";
-        }, 2000);
+        }, 2000); // Hide message after 2 seconds
     } else {
-        alert(`${pdfName} is already in "${playlistName}"`);
+        alert(`"${pdfName}" is already in "${playlist}"`);
     }
-}
+};
 
 // Playlist Navigation
-document.getElementById("prevInPlaylist").addEventListener("click", () => {
-    if (currentFileIndex > 0) {
-        currentFileIndex--;
-        window.location.href = `/viewer.html?pdf=${encodeURIComponent(currentPlaylistFiles[currentFileIndex])}&playlist=${encodeURIComponent(playlistName)}`;
-    }
-});
+if (playlistName && currentPlaylistFiles.length > 0) {
+    const navContainer = document.createElement("div");
+    navContainer.style.margin = "10px";
 
-document.getElementById("nextInPlaylist").addEventListener("click", () => {
-    if (currentFileIndex < currentPlaylistFiles.length - 1) {
-        currentFileIndex++;
-        window.location.href = `/viewer.html?pdf=${encodeURIComponent(currentPlaylistFiles[currentFileIndex])}&playlist=${encodeURIComponent(playlistName)}`;
-    }
-});
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Previous";
+    prevButton.disabled = currentFileIndex === 0;
+    prevButton.addEventListener("click", () => {
+        if (currentFileIndex > 0) {
+            currentFileIndex--;
+            window.location.href = `/viewer.html?pdf=${encodeURIComponent(currentPlaylistFiles[currentFileIndex])}&playlist=${encodeURIComponent(playlistName)}`;
+        }
+    });
+
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Next";
+    nextButton.disabled = currentFileIndex === currentPlaylistFiles.length - 1;
+    nextButton.addEventListener("click", () => {
+        if (currentFileIndex < currentPlaylistFiles.length - 1) {
+            currentFileIndex++;
+            window.location.href = `/viewer.html?pdf=${encodeURIComponent(currentPlaylistFiles[currentFileIndex])}&playlist=${encodeURIComponent(playlistName)}`;
+        }
+    });
+
+    const fileInfo = document.createElement("div");
+    fileInfo.textContent = `File ${currentFileIndex + 1} of ${currentPlaylistFiles.length}`;
+
+    navContainer.appendChild(prevButton);
+    navContainer.appendChild(nextButton);
+    navContainer.appendChild(fileInfo);
+
+    pdfContainer.before(navContainer);
+}
 
 // Initialize playlist buttons
 updatePlaylistButtons();
