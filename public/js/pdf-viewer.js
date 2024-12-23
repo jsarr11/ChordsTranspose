@@ -5,6 +5,19 @@ const pdfUrl = `/pdfs/${urlParams.get('pdf')}`;
 
 const pdfContainer = document.getElementById('pdfContainer');
 
+// Add global styles for reduced spacing below chord lines
+const style = document.createElement('style');
+style.textContent = `
+    #pdfContainer pre {
+        margin: 0; /* Default margin for all lines */
+        line-height: 1.5; /* Default line spacing */
+    }
+    #pdfContainer pre.below-chord {
+        margin-top: -5px; /* Reduced space between chord line and the next line */
+    }
+`;
+document.head.appendChild(style);
+
 // Regex to identify chords, including variants like A7, Adim, etc.
 const chordRegex = /^[A-G](#|b)?(m|dim|aug|7|6|9|11|13|sus[24])?(\s+[A-G](#|b)?(m|dim|aug|7|6|9|11|13|sus[24])?)*$/;
 
@@ -99,6 +112,8 @@ const displayTextContent = (lines) => {
         const preElement = document.createElement('pre');
         if (chordRegex.test(line.trim())) {
             preElement.style.color = 'blue'; // Highlight chord lines
+        } else if (index > 0 && chordRegex.test(lines[index - 1]?.trim())) {
+            preElement.classList.add('below-chord'); // Add reduced margin for lines below chords
         }
         preElement.textContent = line; // Preserve whitespace and formatting
         pdfContainer.appendChild(preElement);
