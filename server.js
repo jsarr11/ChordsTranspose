@@ -11,9 +11,9 @@ app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Import routes
-const indexRouter = require('./routes/index');
-app.use('/api', indexRouter);
+// Import routes from routes.js
+const routes = require('./routes');
+app.use('/api', routes);
 
 // Default route to serve the index.html file
 app.get('*', (req, res) => {
