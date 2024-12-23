@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Playlists</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/playlists.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>Manage Playlists</h1>
+</header>
+<main>
+    <!-- Playlists Section -->
+    <section id="playlists-section">
+        <h2>Playlists</h2>
+        <div id="playlists"></div>
+        <input type="text" id="newPlaylistName" placeholder="Playlist name">
+        <button id="createPlaylistButton">Create Playlist</button>
+    </section>
+
+    <!-- Playlist Details Section -->
+    <section id="playlist-details" style="display: none;">
+        <h2 id="playlist-title"></h2>
+        <ul id="playlist-items"></ul>
+        <button id="saveOrderButton">Save Order</button>
+        <button id="backToPlaylistsButton">Back to Playlists</button>
+    </section>
+</main>
+</body>
+</html>

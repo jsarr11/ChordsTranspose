@@ -5,6 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
     background-color: #f4f4f4;
 }
@@ -45,4 +46,31 @@ body {
 
 #error-message {
     margin-top: 10px;
+}
+
+
+#add-to-playlist {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#add-to-playlist h2 {
+    margin-bottom: 10px;
+}
+
+#playlist-buttons button {
+    margin: 5px 5px 0 0;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#playlist-buttons button:hover {
+    background-color: #0056b3;
 }
