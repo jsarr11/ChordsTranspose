@@ -5,8 +5,13 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
+// Function to normalize strings by removing accents
+const normalizeString = (str) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+};
+
 router.get('/search', (req, res) => {
-    const query = req.query.query.toLowerCase();
+    const query = normalizeString(req.query.query);
     const pdfDir = path.join(__dirname, 'public', 'pdfs');
 
     fs.readdir(pdfDir, (err, files) => {
@@ -14,7 +19,7 @@ router.get('/search', (req, res) => {
             console.error('Error reading PDF directory:', err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        const results = files.filter(file => file.toLowerCase().includes(query));
+        const results = files.filter(file => normalizeString(file).includes(query));
         res.json(results);
     });
 });
