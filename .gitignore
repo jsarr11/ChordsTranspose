@@ -29,3 +29,4 @@ bower_components
 
 # Ignore public/pdfs folder
 public/pdfs/
+/.idea
